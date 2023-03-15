@@ -26,10 +26,53 @@
 
 ;;; Code:
 
-(setq emacs-config-directory "~/.config/remacs/")
+(setq emacs-config-directory "~/.config/gresemacs/")
+(setq emacs-user-modules-directory "~/.config/gresemacs/modules/")
 
+;; TODO: Move me
 (defun from-emacs-config-directory (path)
   "Create path from 'emacs-config-directory'"
-  (concat emacs-config-directory path))
+  (concat (file-name-as-directory emacs-config-directory) path))
+
+;; TODO: Move me
+(defun from-default-emacs-config-directory (path)
+  "Create path from 'emacs-config-directory'"
+  (concat (file-name-as-directory "~/.emacs.d") path))
+
+;; TODO: Move me
+(defun use-module (module)
+  "Load module defined by user."
+  (load-file (concat
+			  (file-name-as-directory emacs-user-modules-directory)
+			  (concat (symbol-name module) ".el"))))
+
+;; TODO: Move me
+(defun open-init-file ()
+  "Open init file on gresemacs."
+  (interactive)
+  (find-file (from-emacs-config-directory "init.el"))) 
+
+;; TODO: Move me
+(require 'package)
+
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+(package-initialize)
+
+(defun install-package (package)
+  "Install package, duh."
+  (when (not (package-installed-p package))
+			(package-refresh-contents)
+			(package-install package)))
+
+;; TODO: Document it, and move it.
+(defun ensure-packages-installed (packages)
+  "Install package, duh."
+  (mapcar (lambda (pkg)
+			(install-package pkg)
+			(require pkg)) packages))
+
+(global-set-key (kbd "C-c C-f") 'open-init-file)
 
 (load-file (from-emacs-config-directory "init.el"))
+

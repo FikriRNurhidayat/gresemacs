@@ -4,3 +4,4 @@ elpa/
 eshell/
 *~
 projects
+/transient/
