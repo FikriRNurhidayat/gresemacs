@@ -72,6 +72,13 @@
 			(install-package pkg)
 			(require pkg)) packages))
 
+;; Stolen from: https://stackoverflow.com/questions/1817257/how-to-determine-operating-system-in-elisp
+(defmacro with-system (type &rest body)
+  "Evaluate BODY if `system-type' equals TYPE."
+  (declare (indent defun))
+  `(when (eq system-type ',type)
+     ,@body))
+
 (global-set-key (kbd "C-c C-f") 'open-init-file)
 
 (load-file (from-emacs-config-directory "init.el"))
